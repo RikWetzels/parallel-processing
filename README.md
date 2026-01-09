@@ -7,6 +7,7 @@ A Python project with CUDA support for parallel processing tasks.
 - Python 3.12 or higher
 - NVIDIA CUDA Toolkit 13.1 (or compatible version)
 - NVIDIA GPU with CUDA support
+- UV package manager (will be installed automatically by setup script)
 
 ## CUDA Environment Setup
 
@@ -58,10 +59,41 @@ The following environment variables are configured:
 - **CUDA_TILE_LOGS**: Logging level for cuTile (default: `CUTILEIR`)
 - **CUDA_TILE_TEMP_DIR**: Temporary directory for CUDA tile files
 
+## Quick Start (First Time Setup)
+
+Run the all-in-one setup script:
+
+```cmd
+scripts\setup_all.bat
+```
+
+This will:
+1. Install UV package manager (if not already installed)
+2. Configure CUDA environment variables
+3. Prompt to add UV to your PATH permanently
+
+Then install project dependencies:
+
+```cmd
+uv sync
+```
+
 ## Installation
 
-```bash
-# Install dependencies (using uv or pip)
+### Manual Setup
+
+If you prefer to set up components individually:
+
+```cmd
+# 1. Install/configure UV
+scripts\setup_uv.bat
+# Or for PowerShell with auto-install:
+.\scripts\setup_uv.ps1
+
+# 2. Setup CUDA environment
+scripts\setup_cuda_env.bat
+
+# 3. Install project dependencies
 uv sync
 ```
 
