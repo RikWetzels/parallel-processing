@@ -29,10 +29,33 @@ call "%~dp0setup_cuda_env.bat"
 
 echo.
 echo ========================================
+echo.
+
+REM Install dependencies
+echo [3/3] Installing project dependencies...
+call uv sync
+if %ERRORLEVEL% NEQ 0 (
+    echo WARNING: uv sync failed, continuing...
+)
+
+REM Patch venv activation
+echo.
+echo Patching virtual environment with CUDA settings...
+call "%~dp0patch_venv_activation.bat"
+
+echo.
+echo ========================================
 echo  Setup Complete!
 echo ========================================
 echo.
-echo You can now run:
-echo   uv sync          - Install project dependencies
-echo   uv run python    - Run Python with the project environment
+echo CUDA environment is configured!
+echo To use the project:
+echo   1. Activate the virtual environment:
+echo      .venv\Scripts\activate.bat
+echo.
+echo   2. Run your code:
+echo      python src\main.py
+echo.
+echo   Or use uv run:
+echo      uv run python src\main.py
 echo.
