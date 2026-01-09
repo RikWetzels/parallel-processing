@@ -23,35 +23,9 @@ scripts\setup_cuda_env.bat
 
 This will set up all required environment variables for the current terminal session.
 
-### Option 2: Python Configuration
-
-Use the provided Python module to configure CUDA programmatically:
-
-```python
-from cuda_config import setup_cuda_environment
-
-# Use default configuration
-setup_cuda_environment()
-
-# Or load from .env file
-from cuda_config import load_cuda_env_from_file
-load_cuda_env_from_file()
-```
-
-### Option 3: Environment File
-
-1. Copy `.env.example` to `.env`:
-   ```cmd
-   copy .env.example .env
-   ```
-
-2. Edit `.env` to match your system's CUDA installation path
-
-3. Load the environment in your Python code using the `cuda_config` module
-
 ### Required Environment Variables
 
-The following environment variables are configured:
+The following environment variables are automatically configured when you activate the virtual environment:
 
 - **CUDA_PATH**: Path to CUDA installation (default: `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.1`)
 - **CUDA_TILE_ENABLE_CRASH_DUMP**: Enable crash dumps for debugging (default: `1`)
@@ -70,13 +44,16 @@ scripts\setup_all.bat
 This will:
 1. Install UV package manager (if not already installed)
 2. Configure CUDA environment variables
-3. Prompt to add UV to your PATH permanently
+3. Install project dependencies (`uv sync`)
+4. Patch virtual environment activation to include CUDA settings
 
-Then install project dependencies:
+After setup, activate the virtual environment:
 
 ```cmd
-uv sync
+.venv\Scripts\activate.bat
 ```
+
+Now CUDA environment variables are automatically set whenever you activate the venv!
 
 ## Installation
 
@@ -99,16 +76,20 @@ uv sync
 
 ## Usage
 
-```python
-# Import your modules
-from cuda_config import setup_cuda_environment
-from main import main
+Simply activate the virtual environment and run your code:
 
-# Configure CUDA environment
-setup_cuda_environment()
+```cmd
+# Activate virtual environment
+.venv\Scripts\activate.bat
 
-# Run your code
-main()
+# Run your Python code
+python src\main.py
+```
+
+Or use `uv run` without activation:
+
+```cmd
+uv run python src\main.py
 ```
 
 ## Development
