@@ -1,0 +1,50 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run with UV",
+            "type": "shell",
+            "command": "${env:USERPROFILE}\\.local\\bin\\uv.exe",
+            "args": [
+                "run",
+                "${file}"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run main.py with UV",
+            "type": "shell",
+            "command": "${env:USERPROFILE}\\.local\\bin\\uv.exe",
+            "args": [
+                "run",
+                "${workspaceFolder}\\src\\main.py"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "UV Sync",
+            "type": "shell",
+            "command": "${env:USERPROFILE}\\.local\\bin\\uv.exe",
+            "args": [
+                "sync"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}
