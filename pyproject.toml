@@ -34,3 +34,6 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = "src"
+filterwarnings = [
+    "ignore::DeprecationWarning:numba_cuda.*",
+]

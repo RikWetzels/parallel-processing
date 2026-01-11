@@ -10,9 +10,15 @@ from .cuda_device_driver import (
     get_driver_device,
     is_cuda_available,
 )
+from .numba_config import (
+    NumbaConfig,
+    get_numba_config,
+)
 
 __all__ = [
     "CudaDeviceDriver",
     "get_driver_device", 
     "is_cuda_available",
+    "NumbaConfig",
+    "get_numba_config",
 ]
