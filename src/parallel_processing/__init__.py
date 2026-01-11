@@ -14,6 +14,10 @@ from .numba_config import (
     NumbaConfig,
     get_numba_config,
 )
+from .cupy_config import (
+    CupyConfig,
+    get_cupy_config,
+)
 
 __all__ = [
     "CudaDeviceDriver",
@@ -21,4 +25,6 @@ __all__ = [
     "is_cuda_available",
     "NumbaConfig",
     "get_numba_config",
+    "CupyConfig",
+    "get_cupy_config",
 ]
