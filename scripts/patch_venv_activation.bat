@@ -23,7 +23,7 @@ if %ERRORLEVEL% EQU 0 (
     exit /b 0
 )
 
-REM Backup original
+REM Backup original't-
 copy "%ACTIVATE_SCRIPT%" "%ACTIVATE_SCRIPT%.backup" >nul
 
 REM Add CUDA settings to activation script
