@@ -1,6 +1,7 @@
 """Tests for Numba Configuration wrapper."""
 
 import pytest
+import numpy as np
 from parallel_processing import NumbaConfig, get_numba_config
 
 
@@ -220,6 +221,101 @@ class TestNumbaConfigOutput:
         assert "=" * 60 in captured.out
         # Check for proper indentation
         assert "  " in captured.out
+
+
+class TestNumbaCudaFunctionality:
+    """Test Numba CUDA functionality."""
+    
+    def test_numba_jit_compilation(self):
+        """Test basic Numba JIT compilation."""
+        from numba import jit
+        
+        @jit(nopython=True)
+        def test_function(x):
+            return x * 2 + 1
+        
+        result = test_function(5)
+        assert result == 11
+    
+    def test_cuda_availability(self):
+        """Test CUDA availability check."""
+        from numba import cuda
+        
+        # Should return a boolean
+        is_available = cuda.is_available()
+        assert isinstance(is_available, bool)
+    
+    @pytest.mark.skipif(
+        not get_numba_config().cuda_available,
+        reason="CUDA not available"
+    )
+    def test_cuda_simple_kernel(self):
+        """Test simple CUDA kernel execution."""
+        from numba import cuda
+        
+        @cuda.jit
+        def add_kernel(x, y, out):
+            idx = cuda.grid(1)
+            if idx < out.size:
+                out[idx] = x[idx] + y[idx]
+        
+        # Test the kernel with device arrays
+        n = 100000
+        x_host = np.arange(n).astype(np.float32)
+        y_host = np.ones(n, dtype=np.float32)
+        
+        # Transfer to GPU
+        x_device = cuda.to_device(x_host)
+        y_device = cuda.to_device(y_host)
+        out_device = cuda.device_array(n, dtype=np.float32)
+        
+        threadsperblock = 256
+        blockspergrid = (n + threadsperblock - 1) // threadsperblock
+        add_kernel[blockspergrid, threadsperblock](x_device, y_device, out_device)
+        
+        # Copy result back to host
+        out = out_device.copy_to_host()
+        
+        # Verify results
+        expected = x_host + y_host
+        np.testing.assert_array_almost_equal(out, expected, decimal=5)
+        
+        # Check first few values explicitly
+        assert np.allclose(out[:5], [1., 2., 3., 4., 5.])
+    
+    @pytest.mark.skipif(
+        not get_numba_config().cuda_available,
+        reason="CUDA not available"
+    )
+    def test_cuda_grid_configuration(self):
+        """Test CUDA kernel grid configuration."""
+        from numba import cuda
+        
+        @cuda.jit
+        def dummy_kernel(out):
+            idx = cuda.grid(1)
+            if idx < out.size:
+                out[idx] = idx
+        
+        # Use larger array for better GPU utilization (modern GPUs have thousands of cores)
+        n = 1_000_000
+        out_device = cuda.device_array(n, dtype=np.int32)
+        
+        threadsperblock = 256
+        blockspergrid = (n + threadsperblock - 1) // threadsperblock
+        
+        # Verify grid configuration
+        assert threadsperblock == 256
+        assert blockspergrid == (n + 255) // 256
+        
+        dummy_kernel[blockspergrid, threadsperblock](out_device)
+        out = out_device.copy_to_host()
+        
+        # Verify output (check first/last elements to avoid large array comparison)
+        assert out[0] == 0
+        assert out[-1] == n - 1
+        # Check a sample in the middle
+        assert out[n//2] == n//2
 
 
 if __name__ == "__main__":
