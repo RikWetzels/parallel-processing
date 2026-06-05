@@ -99,6 +99,72 @@ uv run python src\main.py
 pytest
 ```
 
+## BM3D Baseline and Backend Comparison
+
+This project now includes a baseline adapter around the installed `bm3d` package,
+plus a shared backend interface for comparing results with your own implementation.
+
+### Baseline adapter
+
+- `parallel_processing.bm3d_baseline.Bm3dBaselineBackend`
+
+### Shared comparison helpers
+
+- `parallel_processing.bm3d_interface.DenoiseBackend`
+- `parallel_processing.bm3d_interface.compare_backends`
+- `parallel_processing.bm3d_interface.psnr`
+- `parallel_processing.bm3d_interface.mae`
+
+### Run the comparison benchmark
+
+```cmd
+uv run python scripts\benchmark_bm3d_backends.py --runs 3 --size 256
+```
+
+Use the CuPy starter backend in placeholder mode:
+
+```cmd
+uv run python scripts\benchmark_bm3d_backends.py --cupy-mode stub --runs 3 --size 256
+```
+
+Optional input image (must be a 2D `.npy` array in `[0, 1]`):
+
+```cmd
+uv run python scripts\benchmark_bm3d_backends.py --input path\to\clean_image.npy --sigma 0.08 --runs 3
+```
+
+Save all outputs and metrics for experiment tracking:
+
+```cmd
+uv run python scripts\benchmark_bm3d_backends.py --runs 3 --output-dir outputs\bm3d_run_001
+```
+
+This writes:
+
+- `clean.npy`
+- `noisy.npy`
+- `denoised_<backend>.npy`
+- `metrics.csv`
+- `metrics.json`
+
+### Add your CuPy backend
+
+`src\parallel_processing\bm3d_cupy.py` now includes a starter
+`CupyBm3dBackend` with:
+
+- `mode="reference"`: delegates to package BM3D with explicit CuPy transfer points
+- `mode="stub"`: lightweight GPU placeholder filter for rapid iteration
+
+For your full implementation, replace the stub stage logic with BM3D stages:
+
+- `name` property
+- `denoise(noisy: np.ndarray, sigma: float) -> np.ndarray`
+
+Fixture files are available for deterministic testing:
+
+- `tests\fixtures\clean_gradient_64.npy`
+- `tests\fixtures\noisy_gradient_64_sigma008_seed7.npy`
+
 ## Troubleshooting
 
 ### CUDA DLL Not Found

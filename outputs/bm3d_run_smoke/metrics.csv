@@ -1,0 +1,3 @@
+backend,elapsed_seconds,psnr_db,mae_value
+bm3d-package[np],1.62230610,27.78946748,0.03245851
+cupy-bm3d[stub],0.30046220,24.33118656,0.04626933

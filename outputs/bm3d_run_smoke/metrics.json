@@ -1,0 +1,18 @@
+{
+  "sigma": 0.08,
+  "runs": 1,
+  "results": [
+    {
+      "backend": "bm3d-package[np]",
+      "elapsed_seconds": 1.6223061000346206,
+      "psnr_db": 27.789467481010245,
+      "mae_value": 0.032458506524562836
+    },
+    {
+      "backend": "cupy-bm3d[stub]",
+      "elapsed_seconds": 0.30046219995711,
+      "psnr_db": 24.331186561460086,
+      "mae_value": 0.04626932740211487
+    }
+  ]
+}

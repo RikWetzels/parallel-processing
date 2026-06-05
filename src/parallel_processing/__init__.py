@@ -18,6 +18,15 @@ from .cupy_config import (
     CupyConfig,
     get_cupy_config,
 )
+from .bm3d_interface import (
+    DenoiseBackend,
+    BenchmarkResult,
+    compare_backends,
+    psnr,
+    mae,
+)
+from .bm3d_baseline import Bm3dBaselineBackend
+from .bm3d_cupy import CupyBm3dBackend
 
 __all__ = [
     "CudaDeviceDriver",
@@ -27,4 +36,11 @@ __all__ = [
     "get_numba_config",
     "CupyConfig",
     "get_cupy_config",
+    "DenoiseBackend",
+    "BenchmarkResult",
+    "compare_backends",
+    "psnr",
+    "mae",
+    "Bm3dBaselineBackend",
+    "CupyBm3dBackend",
 ]
